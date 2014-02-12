@@ -250,7 +250,10 @@ class Af_Comics extends Plugin {
 					}
 
 					$header = $xpath->query('(//div[@class="postBody"]/h2)')->item(0);
-					$header->parentNode->removeChild($header);
+					if ($header->parentNode) { $header->parentNode->removeChild($header); }
+
+					$header = $xpath->query('(//div[@class="postBody"]/div[@class="comicPost"])')->item(0);
+					if ($header->parentNode) { $header->parentNode->removeChild($header); }
 
 					$avatar = $xpath->query('(//div[@class="avatar"]//img)')->item(0);
 					$avatar->setAttribute("style","float:left; margin-right: 1em; margin-bottom: 1em;");
