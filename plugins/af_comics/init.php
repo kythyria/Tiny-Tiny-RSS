@@ -81,7 +81,7 @@ class Af_Comics extends Plugin {
 			}
 		}
 
-		if (strpos($article["guid"], "dilbert.com") !== FALSE) {
+		if (strpos($article["link"], "feed.dilbert.com/~r/dilbert/daily_strip") !== FALSE) {
 			if (strpos($article["plugin_data"], "af_comics,$owner_uid:") === FALSE) {
 				$doc = new DOMDocument();
 				@$doc->loadHTML(fetch_file_contents($article["link"]));
@@ -210,7 +210,11 @@ class Af_Comics extends Plugin {
 
 				if ($doc) {
 					$xpath = new DOMXPath($doc);
-					$basenode = $xpath->query('(//div[@id="comicFrame"])')->item(0);
+					$entries = $xpath->query('(//div[@id="comicFrame"]/a/img)');
+
+					foreach ($entries as $entry) {
+						$basenode = $entry;
+					}
 
 					if ($basenode) {
 						$article["content"] = $doc->saveXML($basenode);
@@ -240,7 +244,19 @@ class Af_Comics extends Plugin {
 						$basenode = $entry;
 					}
 
-					$uninteresting = $xpath->query('(//div[@class="heading"])');
+					$uninteresting = $xpath->query('(//div[@class="meta"])');
+					foreach ($uninteresting as $i) {
+						$i->parentNode->removeChild($i);
+					}
+
+					$header = $xpath->query('(//div[@class="postBody"]/h2)')->item(0);
+					$header->parentNode->removeChild($header);
+
+					$avatar = $xpath->query('(//div[@class="avatar"]//img)')->item(0);
+					$avatar->setAttribute("style","float:left; margin-right: 1em; margin-bottom: 1em;");
+					$basenode->insertBefore($avatar, $basenode->firstChild);
+
+					$uninteresting = $xpath->query('(//div[@class="avatar"])');
 					foreach ($uninteresting as $i) {
 						$i->parentNode->removeChild($i);
 					}
