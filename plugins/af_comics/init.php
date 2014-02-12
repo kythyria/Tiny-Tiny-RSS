@@ -210,11 +210,7 @@ class Af_Comics extends Plugin {
 
 				if ($doc) {
 					$xpath = new DOMXPath($doc);
-					$entries = $xpath->query('(//div[@id="comicFrame"]/a/img)');
-
-					foreach ($entries as $entry) {
-						$basenode = $entry;
-					}
+					$entries = $xpath->query('(//div[@id="comicFrame"]/a/img)')->item(0);
 
 					if ($basenode) {
 						$article["content"] = $doc->saveXML($basenode);
