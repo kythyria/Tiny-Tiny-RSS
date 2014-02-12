@@ -240,7 +240,7 @@ class Af_Comics extends Plugin {
 						$basenode = $entry;
 					}
 
-					$uninteresting = $xpath->query('(//div[@class="meta"])');
+					$uninteresting = $xpath->query('(//div[@class="meta"])')->item(0);
 					foreach ($uninteresting as $i) {
 						$i->parentNode->removeChild($i);
 					}
@@ -252,7 +252,6 @@ class Af_Comics extends Plugin {
 					if ($header->parentNode) { $header->parentNode->removeChild($header); }
 
 					$avatar = $xpath->query('(//div[@class="avatar"]//img)')->item(0);
-					$avatar->setAttribute("style","float:left; margin-right: 1em; margin-bottom: 1em;");
 					$basenode->insertBefore($avatar, $basenode->firstChild);
 
 					$uninteresting = $xpath->query('(//div[@class="avatar"])');
